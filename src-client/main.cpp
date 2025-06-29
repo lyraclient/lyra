@@ -1,52 +1,38 @@
-#include "main.hpp"
-
-#include <stdexcept>
-
-#include "libhat/system.hpp"
+#include <thread>
+#include "core/instance.hpp"
 
 #ifdef SELAURA_WINDOWS
-DWORD WINAPI init(LPVOID lpvoid) {
-    selaura::platform::create_instance(mc_handle);
-    return true;
-}
-
-BOOL APIENTRY DllMain(HMODULE hmodule, DWORD dw_reason, LPVOID lp_reserved) {
+#include <Windows.h>
+#include <Psapi.h>
+BOOL APIENTRY DllMain(HMODULE hmodule, DWORD dw_reason, LPVOID lp_reserved)
+#elif SELAURA_LINUX
+#include <dlfcn.h>
+#include <link.h>
+extern "C" [[gnu::visibility("default")]] void mod_init()
+#elif SELAURA_ANDROID
+#include <jni.h>
+#include <dlfcn.h>
+JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)
+#endif
+{
+#ifdef SELAURA_WINDOWS
     if (dw_reason == DLL_PROCESS_ATTACH) {
-        mc_handle = GetModuleHandleW(L"Minecraft.Windows.exe");
+        const HMODULE mc_handle = GetModuleHandleW(L"Minecraft.Windows.exe");
         if (mc_handle == nullptr) return false;
-
         DisableThreadLibraryCalls(mc_handle);
-        CloseHandle(CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)init, hmodule, 0, nullptr));
+#else
+    {
+#endif
+        std::thread([]() {
+            selaura::inst = std::make_shared<selaura::instance>();
+        }).detach();
     }
 
-    return true;
-}
-#else
-void init_linux() {
-    std::thread([]() {
-        auto instance = std::make_shared<selaura::instance>();
-
-        void* mc_handle = dlopen("libminecraftpe.so", 0);
-        if (!mc_handle) throw std::runtime_error("Failed to open libminecraftpe.so");
-
-        selaura::platform::create_instance(mc_handle);
-
-    }).detach();
-}
-#endif
-
-#ifdef SELAURA_LINUX
-extern "C" [[gnu::visibility("default")]] void mod_preinit() {}
-
-extern "C" [[gnu::visibility("default")]] void mod_init() {
-    init_linux();
-}
-#endif
-
 #ifdef SELAURA_ANDROID
-JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved) {
-    init_linux();
+    selaura_platform::set_vm(vm);
 
     return JNI_VERSION_1_6;
-}
+#elif SELAURA_WINDOWS
+    return true;
 #endif
+}

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 project(selaura LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD 26)
 set(CLIENT_VERSION "0.30")
 
 if (WIN32)
