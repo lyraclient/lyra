@@ -4,6 +4,7 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 
 #include "src-client/gui/controls/renderers/SplashTextRenderer.hpp"
+#include "../memory/patterns/latest_windows.hpp"
 
 selaura::instance::instance() {
     auto startTime = std::chrono::high_resolution_clock::now();
@@ -32,7 +33,7 @@ selaura::instance::instance() {
 #endif
     selaura::title::set("Selaura Client {} (version/{}/{})", selaura::version::get_formatted_version(), CLIENT_VERSION, type);
 
-    spdlog::info("_loadsplashes: {}", selaura::mem::find_pattern(GET_SIG(&SplashTextRenderer::_loadSplashes)).value());
+    spdlog::info("_loadsplashes: {}", RESOLVE_SIG(&SplashTextRenderer::_loadSplashes));
 
     auto endTime = std::chrono::high_resolution_clock::now();
     std::chrono::duration<float> duration = endTime - startTime;

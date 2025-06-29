@@ -2,6 +2,8 @@
 #include <libhat/fixed_string.hpp>
 #include <libhat/signature.hpp>
 
+#include "memory.hpp"
+
 namespace selaura::patterns {
     template <auto func_ptr>
     struct signature_map {
@@ -14,6 +16,10 @@ namespace selaura::patterns {
 template <>                                                                   \
 struct selaura::patterns::signature_map<func> {                               \
 static inline constexpr auto value = hat::compile_signature<sig_literal##>(); \
+static uintptr_t resolve() { \
+return selaura::mem::find_pattern(value).value(); \
+} \
 }
 
 #define GET_SIG(func) selaura::patterns::signature_map<func>::value
+#define RESOLVE_SIG(func) selaura::patterns::signature_map<func>::resolve()

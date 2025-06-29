@@ -5,13 +5,9 @@ namespace selaura {
         static std::filesystem::path dir = {};
         if (dir.empty()) {
 #ifdef SELAURA_WINDOWS
-            char* localAppData = nullptr;
-            size_t size = 0;
-            _dupenv_s(&localAppData, &size, "APPDATA");
-
-            if (localAppData) {
-                dir = std::filesystem::path(localAppData + std::string("\\..\\Local\\Packages\\Microsoft.MinecraftUWP_8wekyb3d8bbwe\\RoamingState\\Selaura"));
-            }
+            auto roamingFolder = winrt::Windows::Storage::ApplicationData::Current().RoamingFolder();
+            std::wstring path = roamingFolder.Path().c_str();
+            dir = std::filesystem::path(path) / "Selaura";
 #elif defined(SELAURA_LINUX)
             dir = "/data/data/com.mojang.minecraftpe/Selaura";
 #elif defined(SELAURA_ANDROID)

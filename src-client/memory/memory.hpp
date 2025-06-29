@@ -2,7 +2,6 @@
 #include <cstdint>
 #include <string_view>
 
-#include "patterns/latest_windows.hpp"
 #include "../core/platform/all.hpp"
 
 #include <libhat/fixed_string.hpp>
