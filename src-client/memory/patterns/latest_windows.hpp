@@ -2,6 +2,4 @@
 #include "../patterns.hpp"
 #include "src-client/gui/controls/renderers/SplashTextRenderer.hpp"
 
-DEFINE_SIG(&SplashTextRenderer::_loadSplashes, "45 84 E4 74 ? 48 8B 07 48 8B CF 48 8B 80 ? ? ? ? FF 15 ? ? ? ? 48 8B C8");
-// TODO: get the ACTUAL _loadsplashes sig, this is just a test sig to make sure things work
-// thanks akashic records!
+DEFINE_SIG(&SplashTextRenderer::render_hk, "48 89 5C 24 18 55 56 57 48 8D AC 24 50 FC FF FF 48 81 EC B0 04 00 00 48 8B FA");

@@ -8,12 +8,13 @@ add_library(selaura_client SHARED
     core/builder.cpp
     memory/memory.cpp
     memory/patterns.cpp
+    memory/patches.cpp
     core/platform/handle.cpp
     core/platform/version.cpp
     core/platform/title.cpp
-    core/platform/title.hpp
     core/platform/console.cpp
     core/platform/data_folder.cpp
+    core/platform/hook.cpp
 )
 add_library(selaura::client ALIAS selaura_client)
 

@@ -16,9 +16,14 @@ namespace selaura::patterns {
 template <>                                                                   \
 struct selaura::patterns::signature_map<func> {                               \
 static inline constexpr auto value = hat::compile_signature<sig_literal##>(); \
-static uintptr_t resolve() { \
-return selaura::mem::find_pattern(value).value(); \
-} \
+static uintptr_t resolve() {                                               \
+auto pattern_result = selaura::mem::find_pattern(value);               \
+if (!pattern_result || pattern_result == 0) {                                                 \
+spdlog::error("Signature not found for function: {}", #func);      \
+return 0;                              \
+}                                                                     \
+return pattern_result.value();                                        \
+}                                                                         \
 }
 
 #define GET_SIG(func) selaura::patterns::signature_map<func>::value

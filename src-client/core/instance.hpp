@@ -10,12 +10,14 @@
 
 #include "../memory/memory.hpp"
 #include "../memory/patterns.hpp"
+#include "../memory/patches.hpp"
 
 namespace selaura {
     struct instance : public std::enable_shared_from_this<instance> {
         instance();
         using components_t = std::tuple<
-            sbui::builder
+            sbui::builder,
+            patch_manager
         >;
 
         template <typename component>

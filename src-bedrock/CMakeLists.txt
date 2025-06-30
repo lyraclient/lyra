@@ -1,5 +1,5 @@
 set(SELAURA_BEDROCK_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR} PARENT_SCOPE)
 set(SELAURA_BEDROCK_SOURCES
-
-        PARENT_SCOPE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src-client/gui/controls/renderers/SplashTextRenderer.cpp
+    PARENT_SCOPE
 )

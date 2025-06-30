@@ -3,5 +3,5 @@
 
 class SplashTextRenderer {
 public:
-    MCAPI void _loadSplashes();
+    void render_hk(void* ctx, void* clientInstance, void* owner, int pass, void* renderAABB);
 };

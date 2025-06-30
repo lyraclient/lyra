@@ -6,11 +6,16 @@
 #include "src-client/gui/controls/renderers/SplashTextRenderer.hpp"
 #include "../memory/patterns/latest_windows.hpp"
 
+void __fastcall render_detour(void* ctx, void* clientinstance, void* owner, int pass, void* renderAABB) {
+    spdlog::info("SplashTextRenderer::render intercepted");
+}
+
 selaura::instance::instance() {
     auto startTime = std::chrono::high_resolution_clock::now();
 #ifdef _DEBUG
     selaura::console::init();
 #endif
+    selaura::hook_init();
 
     auto log_file = selaura::get_data_folder() / "logs.txt";
 
@@ -31,9 +36,13 @@ selaura::instance::instance() {
 #else
     std::string type = "release";
 #endif
-    selaura::title::set("Selaura Client {} (version/{}/{})", selaura::version::get_formatted_version(), CLIENT_VERSION, type);
+    selaura::set_title("Selaura Client {} (version/{}/{})", selaura::version::get_formatted_version(), CLIENT_VERSION, type);
 
-    spdlog::info("_loadsplashes: {}", RESOLVE_SIG(&SplashTextRenderer::_loadSplashes));
+
+    this->get<patch_manager>().register_hook(
+        RESOLVE_SIG(&SplashTextRenderer::render_hk),
+        &SplashTextRenderer::render_hk
+    );
 
     auto endTime = std::chrono::high_resolution_clock::now();
     std::chrono::duration<float> duration = endTime - startTime;
