@@ -1,8 +1,11 @@
 cmake_minimum_required(VERSION 3.15)
 project(selaura_client LANGUAGES CXX)
 
+FILE(GLOB IMGUI_SOURCES "${imgui_SOURCE_DIR}/*.cpp")
+
 add_library(selaura_client SHARED
     ${SELAURA_BEDROCK_SOURCES}
+    ${IMGUI_SOURCES}
     main.cpp
     core/instance.cpp
     core/builder.cpp

@@ -63,7 +63,9 @@ set(DOBBY_GENERATE_SHARED OFF CACHE BOOL "Dobby generate shared library")
 add_library(selaura INTERFACE)
 add_library(selaura::selaura ALIAS selaura)
 
-target_include_directories(selaura INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(selaura INTERFACE
+        ${CMAKE_CURRENT_SOURCE_DIR}
+)
 
 if(MSVC)
     target_link_libraries(selaura INTERFACE minhook)

@@ -3,6 +3,7 @@
 #include <libhat/signature.hpp>
 
 #include "memory.hpp"
+#include "member_at.hpp"
 
 namespace selaura::patterns {
     template <auto func_ptr>
