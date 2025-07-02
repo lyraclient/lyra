@@ -9,6 +9,7 @@ namespace selaura::trampolines {
     inline uintptr_t SplashTextRenderer_render = 0;
 
 #ifdef SELAURA_WINDOWS
-    inline decltype(&IDXGISwapChain_hk::Present) IDXGISwapChain_Present = 0;
+    inline decltype(&IDXGIFactory2_hk_CreateSwapChainForCoreWindow) IDXGIFactory2_CreateSwapChainForCoreWindow = 0;
+    inline decltype(&IDXGISwapChain_hk_Present) IDXGISwapChain_Present = 0;
 #endif
 };

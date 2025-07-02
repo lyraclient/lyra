@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include <d3d11.h>
 #include <d3d12.h>
+#include <dxgi1_5.h>
 #include <spdlog/spdlog.h>
 
 #include "imgui/imgui.h"
@@ -12,7 +13,7 @@
 
 #include "../../src-client/memory/patterns.hpp"
 
-struct IDXGISwapChain_hk {
-    HRESULT Present(UINT SyncInterval, UINT Flags);
-};
+HRESULT IDXGIFactory2_hk_CreateSwapChainForCoreWindow(IDXGIFactory2* _thisptr, IUnknown* pDevice, IUnknown* pWindow, const DXGI_SWAP_CHAIN_DESC1* pDesc, IDXGIOutput* pRestrictToOutput, IDXGISwapChain1** ppSwapChain);
+HRESULT IDXGISwapChain_hk_Present(IDXGISwapChain3* _thisptr, UINT SyncInterval, UINT Flags);
+
 #endif

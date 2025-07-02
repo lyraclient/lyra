@@ -40,7 +40,7 @@ target_link_libraries(selaura_client PRIVATE
 
 if (MSVC)
     target_link_libraries(selaura_client PRIVATE
-        minhook
+        minhook dxgi
     )
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
 else()
