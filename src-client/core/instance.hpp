@@ -7,15 +7,19 @@
 
 #include "platform/all.hpp"
 #include "builder.hpp"
+#include "options.hpp"
 
 #include "../memory/memory.hpp"
 #include "../memory/patterns.hpp"
 #include "../memory/patches.hpp"
 
+#include "event/event_manager.hpp"
+
 namespace selaura {
     struct instance : public std::enable_shared_from_this<instance> {
         instance();
         using components_t = std::tuple<
+            event_manager,
             sbui::builder,
             patch_manager
         >;

@@ -3,6 +3,8 @@
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
+#include "event/event_types.hpp"
+
 void __fastcall render_detour(void* ctx, void* clientinstance, void* owner, int pass, void* renderAABB) {
     spdlog::info("SplashTextRenderer::render intercepted");
 }

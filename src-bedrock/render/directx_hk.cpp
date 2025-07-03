@@ -3,35 +3,21 @@
 #include "../../src-client/core/instance.hpp"
 #include "../../src-client/memory/trampolines.hpp"
 
-bool vsync = false;
+HRESULT IDXGIFactory2_hk_CreateSwapChainForCoreWindow(IDXGIFactory2* _thisptr, IUnknown* pDevice, IUnknown* pWindow, const DXGI_SWAP_CHAIN_DESC1* pDesc, IDXGIOutput* pRestrictToOutput, IDXGISwapChain1** ppSwapChain) {
 
-static bool DirectX_TearingSupport() {
-    static bool resolved = false;
-    bool result = false;
     winrt::com_ptr<IDXGIFactory5> factory;
-    if (!resolved && SUCCEEDED(CreateDXGIFactory1(IID_PPV_ARGS(&factory)))) {
-        if (SUCCEEDED(factory->CheckFeatureSupport(
-            DXGI_FEATURE_PRESENT_ALLOW_TEARING,
-            &result,
-            sizeof(result)))) {
-            resolved = true;
-            return result;
+    if (SUCCEEDED(CreateDXGIFactory1(IID_PPV_ARGS(factory.put())))) {
+        if (SUCCEEDED(factory->CheckFeatureSupport(DXGI_FEATURE_PRESENT_ALLOW_TEARING, &selaura::options::tearing_feature_enabled,sizeof(selaura::options::tearing_feature_enabled)))) {
+            selaura::options::tearing_feature_enabled = true;
         }
     }
 
-    resolved = true;
-    return result;
-}
-
-HRESULT IDXGIFactory2_hk_CreateSwapChainForCoreWindow(IDXGIFactory2* _thisptr, IUnknown* pDevice, IUnknown* pWindow, const DXGI_SWAP_CHAIN_DESC1* pDesc, IDXGIOutput* pRestrictToOutput, IDXGISwapChain1** ppSwapChain) {
+    spdlog::debug("DirectX Tearing Support: {}", selaura::options::tearing_feature_enabled);
 
     DXGI_SWAP_CHAIN_DESC1 desc = *pDesc;
-
-    if (!vsync && DirectX_TearingSupport()) {
+    if (!selaura::options::vsync && selaura::options::tearing_feature_enabled) {
         desc.Flags |= DXGI_PRESENT_ALLOW_TEARING;
     }
-
-    spdlog::debug("DirectX Tearing Support: {}", DirectX_TearingSupport());
 
     auto ofunc = selaura::trampolines::IDXGIFactory2_CreateSwapChainForCoreWindow;
     return ofunc(_thisptr, pDevice, pWindow, &desc, pRestrictToOutput, ppSwapChain);
@@ -40,31 +26,13 @@ HRESULT IDXGIFactory2_hk_CreateSwapChainForCoreWindow(IDXGIFactory2* _thisptr, I
 HRESULT IDXGISwapChain_hk_Present(IDXGISwapChain3* _thisptr, UINT SyncInterval, UINT Flags) {
     auto ofunc = selaura::trampolines::IDXGISwapChain_Present;
 
-    static int frameCount = 0;
-    static auto lastTime = std::chrono::high_resolution_clock::now();
-
-    frameCount++;
-    auto now = std::chrono::high_resolution_clock::now();
-    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastTime);
-    if (elapsed.count() >= 1000) {
-        spdlog::info("FPS: {}", frameCount);
-        frameCount = 0;
-        lastTime = now;
-    }
-
-    UINT presentFlags = Flags;
-    if (!vsync && DirectX_TearingSupport()) {
-        SyncInterval = 0;
-        presentFlags |= DXGI_PRESENT_ALLOW_TEARING;
-    }
-
     static bool refreshed = false;
     if (!refreshed) {
         refreshed = true;
         return DXGI_ERROR_DEVICE_RESET;
     }
 
-    return ofunc(_thisptr, SyncInterval, presentFlags);
+    return ofunc(_thisptr, SyncInterval, Flags);
 }
 
 #endif
