@@ -10,6 +10,8 @@
 void bgfx::d3d11::RendererContextD3D11::submit_hk(void *a1, void *a2, void *a3) {
     auto inst = selaura::get();
     static int fps = 0;
+    static bool once = false;
+    auto ofunc = selaura::trampolines::bgfx_d3d11_RendererContextD3D11_submit;
 
     {
         static int frameCount = 0;
@@ -23,6 +25,11 @@ void bgfx::d3d11::RendererContextD3D11::submit_hk(void *a1, void *a2, void *a3) 
             frameCount = 0;
             lastTime = now;
         }
+    }
+
+    if (!once) {
+        once = true;
+        (this->*ofunc)(a1, a2, a3);
     }
 
     std::once_flag vtable_hooking_flag;
@@ -52,7 +59,6 @@ void bgfx::d3d11::RendererContextD3D11::submit_hk(void *a1, void *a2, void *a3) 
     selaura::frame_event ev {fps};
     inst->get<selaura::event_manager>().dispatch<selaura::frame_event>(ev);
 
-    auto ofunc = selaura::trampolines::bgfx_d3d11_RendererContextD3D11_submit;
     (this->*ofunc)(a1, a2, a3);
 }
 

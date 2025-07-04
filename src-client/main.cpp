@@ -4,6 +4,7 @@
 #ifdef SELAURA_WINDOWS
 #include <Windows.h>
 #include <Psapi.h>
+
 BOOL APIENTRY DllMain(HMODULE hmodule, DWORD dw_reason, LPVOID lp_reserved)
 #elif SELAURA_LINUX
 #include <dlfcn.h>
@@ -26,6 +27,7 @@ JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)
         std::thread([]() {
             selaura::inst = std::make_shared<selaura::instance>();
         }).detach();
+
     }
 
 #ifdef SELAURA_ANDROID

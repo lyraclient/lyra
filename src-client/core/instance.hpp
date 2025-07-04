@@ -38,5 +38,6 @@ namespace selaura {
     };
 
     inline std::shared_ptr<selaura::instance> inst;
+    inline std::atomic<bool> running;
     std::shared_ptr<selaura::instance> get();
 };

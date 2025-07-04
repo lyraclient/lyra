@@ -4,7 +4,6 @@
 #include "../../src-client/memory/trampolines.hpp"
 
 HRESULT IDXGIFactory2_hk_CreateSwapChainForCoreWindow(IDXGIFactory2* _thisptr, IUnknown* pDevice, IUnknown* pWindow, const DXGI_SWAP_CHAIN_DESC1* pDesc, IDXGIOutput* pRestrictToOutput, IDXGISwapChain1** ppSwapChain) {
-
     winrt::com_ptr<IDXGIFactory5> factory;
     if (SUCCEEDED(CreateDXGIFactory1(IID_PPV_ARGS(factory.put())))) {
         if (SUCCEEDED(factory->CheckFeatureSupport(DXGI_FEATURE_PRESENT_ALLOW_TEARING, &selaura::options::tearing_feature_enabled,sizeof(selaura::options::tearing_feature_enabled)))) {

@@ -5,10 +5,11 @@
 #include <vector>
 #include <string>
 
-class SplashTextRenderer {
-public:
-    MEMBER_AT(0x10, mCurrentSplash, int);
-    MEMBER_AT(0x28, mSplashes, std::vector<std::string>);
+struct SplashTextRenderer {
+    std::byte pad[0x10];
+    int mCurrentSplash;
+    std::byte pad2[0x28 - 0x10];
+    std::vector<std::string> mSplashes;
 
     void render_hk(void* ctx, void* clientInstance, void* owner, int pass, void* renderAABB);
 };

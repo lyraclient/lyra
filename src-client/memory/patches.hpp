@@ -25,3 +25,10 @@ namespace selaura {
         }
     };
 };
+
+#define REGISTER_HOOK(func_ptr, trampoline_ptr) \
+register_hook(                             \
+RESOLVE_SIG(func_ptr),                 \
+func_ptr,                             \
+reinterpret_cast<void**>(trampoline_ptr) \
+)
