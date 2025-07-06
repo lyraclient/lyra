@@ -6,6 +6,8 @@ set(SELAURA_BEDROCK_SOURCES
     ${IMGUI_FILES}
     ${CMAKE_CURRENT_SOURCE_DIR}/render/directx_hk.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src-client/bgfx/bgfx.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src-client/gui/controls/renderers/SplashTextRenderer.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src-client/gui/ScreenView.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src-client/renderer/screen/MinecraftUIRenderContext.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src-client/uri/GameArguments.cpp
     PARENT_SCOPE
 )

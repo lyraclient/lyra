@@ -3,6 +3,10 @@ project(selaura_client LANGUAGES CXX)
 
 FILE(GLOB IMGUI_SOURCES "${imgui_SOURCE_DIR}/*.cpp")
 
+if (MSVC)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+endif()
+
 add_library(selaura_client SHARED
     ${SELAURA_BEDROCK_SOURCES}
     ${IMGUI_SOURCES}
@@ -29,6 +33,7 @@ target_include_directories(selaura_client PRIVATE
     spdlog
     libhat
     gsl
+    glm
 )
 
 target_link_libraries(selaura_client PRIVATE
@@ -36,13 +41,13 @@ target_link_libraries(selaura_client PRIVATE
     spdlog
     libhat
     Microsoft.GSL::GSL
+    glm
 )
 
 if (MSVC)
     target_link_libraries(selaura_client PRIVATE
         minhook dxgi
     )
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded")
 else()
     target_link_libraries(selaura_client PRIVATE
         dobby_static

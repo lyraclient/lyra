@@ -1,12 +1,17 @@
 cmake_minimum_required(VERSION 3.15)
 project(selaura LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 26)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 set(CLIENT_VERSION "0.30")
 
 if (WIN32)
 
     add_compile_definitions(SELAURA_WINDOWS)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+
     if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
         if (CMAKE_CXX_SIMULATE_ID STREQUAL "MSVC")
             message(STATUS "Selaura: Clang-cl detected (beware there may be issues using this, as it is not tested).")

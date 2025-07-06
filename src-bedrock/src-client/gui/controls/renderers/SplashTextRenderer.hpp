@@ -5,11 +5,14 @@
 #include <vector>
 #include <string>
 
-struct SplashTextRenderer {
-    std::byte pad[0x10];
-    int mCurrentSplash;
-    std::byte pad2[0x28 - 0x10];
-    std::vector<std::string> mSplashes;
+#include "src-client/renderer/screen/MinecraftUIRenderContext.hpp"
 
-    void render_hk(void* ctx, void* clientInstance, void* owner, int pass, void* renderAABB);
+class SplashTextRenderer : public MinecraftCustomUIRenderer {
+    std::byte pad[0x20];
+public:
+    int mCurrentSplash;
+private:
+    std::byte pad2[0xC];
+public:
+    std::vector<std::string> mSplashes;
 };

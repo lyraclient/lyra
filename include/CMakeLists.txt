@@ -43,6 +43,12 @@ CPMAddPackage(
         GIT_TAG v4.0.0
 )
 
+CPMAddPackage(
+        NAME glm
+        GITHUB_REPOSITORY g-truc/glm
+        GIT_TAG master
+)
+
 if(MSVC)
     CPMAddPackage(
             NAME minhook
@@ -79,4 +85,5 @@ target_link_libraries(selaura INTERFACE
         libhat
         spdlog::spdlog
         GSL::gsl
+        glm
 )
