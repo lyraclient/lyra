@@ -6,9 +6,9 @@
 #include "../memory/patterns/loader.hpp"
 
 selaura::instance::instance() {
-    auto startTime = std::chrono::high_resolution_clock::now();
-
     selaura::console::init();
+
+    auto startTime = std::chrono::high_resolution_clock::now();
     selaura::resolve_signatures();
     selaura::hook_init();
 

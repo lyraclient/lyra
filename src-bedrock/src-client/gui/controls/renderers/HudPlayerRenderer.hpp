@@ -6,6 +6,6 @@
 class HudPlayerRenderer : public MinecraftCustomUIRenderer {
     std::byte pad[16];
 public:
-    float timeToClose;
+    float mRenderTime;
     float tick;
 };
