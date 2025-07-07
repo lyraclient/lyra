@@ -16,6 +16,7 @@ add_library(selaura_client SHARED
     memory/memory.cpp
     memory/patterns.cpp
     memory/patches.cpp
+    memory/patterns/loader.cpp
     core/platform/handle.cpp
     core/platform/version.cpp
     core/platform/title.cpp

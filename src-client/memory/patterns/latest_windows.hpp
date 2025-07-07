@@ -1,6 +1,7 @@
 #pragma once
-#include "../patterns.hpp"
 #include "src-client/bgfx/bgfx.hpp"
+#include "src-client/gui/ScreenView.hpp"
+#include "src-client/uri/GameArguments.hpp"
 
 DEFINE_SIG(&bgfx::d3d11::RendererContextD3D11::submit_hk, "48 8B C4 55 53 56 57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ?");
 DEFINE_SIG(&bgfx::d3d12::RendererContextD3D12::submit_hk, "40 55 53 56 57 41 54 41 55 41 56 41 57 B8");

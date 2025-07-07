@@ -2,27 +2,30 @@
 #include <Windows.h>
 #include <spdlog/sinks/basic_file_sink.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
-
 #include "event/event_types.hpp"
+#include "../memory/patterns/loader.hpp"
 
 selaura::instance::instance() {
     auto startTime = std::chrono::high_resolution_clock::now();
 
     selaura::console::init();
+    selaura::resolve_signatures();
     selaura::hook_init();
 
-    auto log_file = selaura::get_data_folder() / "logs.txt";
+    auto log_future = std::async(std::launch::async, [] {
+        auto log_file = selaura::get_data_folder() / "logs.txt";
+        std::vector<spdlog::sink_ptr> sinks = {
+            std::make_shared<spdlog::sinks::basic_file_sink_mt>(log_file.string(), true),
+            std::make_shared<spdlog::sinks::stdout_color_sink_mt>()
+        };
+        auto logger = std::make_shared<spdlog::logger>("selaura", begin(sinks), end(sinks));
+        logger->set_pattern("[%Y-%m-%d %H:%M:%S] [%^%l%$] %v");
+        logger->set_level(spdlog::level::debug);
+        logger->flush_on(spdlog::level::debug);
+        return logger;
+    });
 
-    std::vector<spdlog::sink_ptr> sinks;
-    sinks.push_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>(log_file.string(), true));
-    sinks.push_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
-
-    auto logger = std::make_shared<spdlog::logger>("selaura", begin(sinks), end(sinks));
-    logger->set_pattern("[%Y-%m-%d %H:%M:%S] [%^%l%$] %v");
-    logger->set_level(spdlog::level::debug);
-    logger->flush_on(spdlog::level::debug);
-
-    spdlog::set_default_logger(logger);
+    spdlog::set_default_logger(log_future.get());
 
     spdlog::info("Detected Minecraft version: {}", selaura::version::get_formatted_version());
 

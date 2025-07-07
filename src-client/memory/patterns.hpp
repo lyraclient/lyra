@@ -27,7 +27,7 @@ struct selaura::patterns::signature_map<func> {                                 
     static inline constexpr auto value = hat::compile_signature<sig_literal##>();                  \
                                                                                                    \
     static uintptr_t resolve() {                                                                   \
-auto result = selaura::mem::find_pattern(value);                                           \
+static auto result = selaura::mem::find_pattern(value);                                           \
 if (!result || result.value() == 0) {                                                      \
 spdlog::error("Signature not found for function: {}", #func);                           \
 return 0;                                                                              \
