@@ -14,6 +14,7 @@ namespace selaura::trampolines {
     inline decltype(&ScreenView::setupAndRender_hk) ScreenView_setupAndRender = 0;
     inline decltype(&MinecraftUIRenderContext::renderCustom_hk) MinecraftUIRenderContext_renderCustom = 0;
     inline decltype(&BaseLightTextureImageBuilder::createBaseLightTextureData_hk) BaseLightTextureImageBuilder_createBaseLightTextureData = 0;
+    inline decltype(&NetherLightTextureImageBuilder::createBaseLightTextureData_hk) NetherLightTextureImageBuilder_createBaseLightTextureData = 0;
 
 #ifdef SELAURA_WINDOWS
     inline decltype(&IDXGIFactory2_hk_CreateSwapChainForCoreWindow) IDXGIFactory2_CreateSwapChainForCoreWindow = 0;

@@ -13,5 +13,9 @@ struct BaseLightData {
 };
 
 struct BaseLightTextureImageBuilder {
-    std::unique_ptr<BaseLightData> createBaseLightTextureData_hk(void* clientInstance, const BaseLightData& base_light_data);
+    std::unique_ptr<BaseLightData> createBaseLightTextureData_hk(void* clientInstance, const BaseLightData* base_light_data);
+};
+
+struct NetherLightTextureImageBuilder {
+    std::unique_ptr<BaseLightData> createBaseLightTextureData_hk(void* clientInstance, const BaseLightData* base_light_data);
 };

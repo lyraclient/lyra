@@ -33,6 +33,11 @@ namespace selaura {
                           reinterpret_cast<void**>(&selaura::trampolines::BaseLightTextureImageBuilder_createBaseLightTextureData));
         }));
 
+        tasks.push_back(std::async(std::launch::async, [&] {
+            REGISTER_HOOK(&NetherLightTextureImageBuilder::createBaseLightTextureData_hk,
+                          reinterpret_cast<void**>(&selaura::trampolines::NetherLightTextureImageBuilder_createBaseLightTextureData));
+        });
+
         for (auto& task : tasks) task.get();
     }
 };
