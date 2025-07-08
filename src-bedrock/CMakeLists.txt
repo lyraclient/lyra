@@ -9,5 +9,6 @@ set(SELAURA_BEDROCK_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src-client/gui/ScreenView.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src-client/renderer/screen/MinecraftUIRenderContext.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src-client/uri/GameArguments.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src-client/world/BaseLightTextureImageBuilder.cpp
     PARENT_SCOPE
 )

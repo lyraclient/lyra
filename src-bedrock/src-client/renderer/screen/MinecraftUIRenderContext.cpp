@@ -5,6 +5,7 @@
 void MinecraftUIRenderContext::renderCustom_hk(gsl::not_null<CustomRenderComponent*> customRender, int pass, RectangleArea* renderAABB) {
     auto ofunc = selaura::trampolines::MinecraftUIRenderContext_renderCustom;
 
+    //spdlog::debug("the thing: {}", customRender->mOwner->name);
     if (customRender->mOwner->name == "splash_text") {
         (this->*ofunc)(customRender, pass, renderAABB);
         SplashTextRenderer* renderer = reinterpret_cast<SplashTextRenderer*>(customRender->renderer);
