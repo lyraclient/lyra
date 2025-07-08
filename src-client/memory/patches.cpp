@@ -28,6 +28,11 @@ namespace selaura {
                           reinterpret_cast<void**>(&selaura::trampolines::GameArguments_onUri));
         }));
 
+        tasks.push_back(std::async(std::launch::async, [&] {
+            REGISTER_HOOK(&BaseLightTextureImageBuilder::createBaseLightTextureData_hk,
+                          reinterpret_cast<void**>(&selaura::trampolines::BaseLightTextureImageBuilder_createBaseLightTextureData));
+        }));
+
         for (auto& task : tasks) task.get();
     }
 };
