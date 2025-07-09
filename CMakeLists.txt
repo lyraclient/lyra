@@ -50,6 +50,6 @@ add_compile_definitions(
 )
 
 add_subdirectory(include)
-add_subdirectory(src-bedrock)
-add_subdirectory(src-client)
-add_subdirectory(src-native-plugin)
+add_subdirectory(src/bedrock)
+add_subdirectory(src/client)
+add_subdirectory(src/src-native-plugin)
