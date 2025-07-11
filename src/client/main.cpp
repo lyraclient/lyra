@@ -1,40 +1,40 @@
 #include <thread>
-#include "core/instance.hpp"
 
+#include "client.hpp"
+#include "platform/platform.hpp"
+
+
+void init() {
 #ifdef SELAURA_WINDOWS
-#include <Windows.h>
-#include <Psapi.h>
+    AllocConsole();
 
-BOOL APIENTRY DllMain(HMODULE hmodule, DWORD dw_reason, LPVOID lp_reserved)
-#elif SELAURA_LINUX
-#include <dlfcn.h>
-#include <link.h>
-extern "C" [[gnu::visibility("default")]] void mod_init()
-#elif SELAURA_ANDROID
-#include <jni.h>
-#include <dlfcn.h>
-JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)
+    AttachConsole(GetCurrentProcessId());
+    SetConsoleTitleA("Selaura Client Console");
+
+    FILE* fp;
+    freopen_s(&fp, "CONOUT$", "w", stdout);
+    freopen_s(&fp, "CONOUT$", "w", stderr);
+    freopen_s(&fp, "CONIN$", "r", stdin);
 #endif
-{
-#ifdef SELAURA_WINDOWS
-    if (dw_reason == DLL_PROCESS_ATTACH) {
-        const HMODULE mc_handle = GetModuleHandleW(L"Minecraft.Windows.exe");
-        if (mc_handle == nullptr) return false;
-        DisableThreadLibraryCalls(mc_handle);
-#else
-    {
-#endif
-        std::thread([]() {
-            selaura::inst = std::make_shared<selaura::instance>();
-        }).detach();
-
-    }
-
-#ifdef SELAURA_ANDROID
-    selaura_platform::set_vm(vm);
-
-    return JNI_VERSION_1_6;
-#elif SELAURA_WINDOWS
-    return true;
-#endif
+    auto instance = std::make_shared<selaura::client>();
+    instance->init();
 }
+
+#ifdef SELAURA_WINDOWS
+BOOL APIENTRY DllMain(HMODULE hmodule, DWORD dw_reason, LPVOID lp_reserved) {
+    if (dw_reason == DLL_PROCESS_ATTACH) {
+        const auto& handle = selaura::get_dynamic_module("Minecraft.Windows.exe");
+        if (!handle.valid()) return false;
+        DisableThreadLibraryCalls(static_cast<HMODULE>(handle.native_handle));
+
+        std::thread(&init).detach();
+    }
+    return true;
+}
+#endif
+
+#ifdef SELAURA_LINUX
+extern "C" [[gnu::visibility("default")]] void mod_init() {
+    std::thread(&init).detach();
+}
+#endif

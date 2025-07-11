@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.28)
 project(selaura LANGUAGES CXX)
 
 if(NOT CPM_SOURCE_CACHE)
@@ -49,35 +49,12 @@ CPMAddPackage(
         GIT_TAG master
 )
 
-if(MSVC)
-    CPMAddPackage(
-            NAME minhook
-            GITHUB_REPOSITORY TsudaKageyu/minhook
-            GIT_TAG master
-    )
-else()
-    CPMAddPackage(
-            NAME dobby
-            GITHUB_REPOSITORY selauraclient/Dobby
-            GIT_TAG master
-    )
-endif()
-
-set(DOBBY_DEBUG OFF CACHE BOOL "Dobby debug mode")
-set(DOBBY_GENERATE_SHARED OFF CACHE BOOL "Dobby generate shared library")
-
 add_library(selaura INTERFACE)
 add_library(selaura::selaura ALIAS selaura)
 
 target_include_directories(selaura INTERFACE
         ${CMAKE_CURRENT_SOURCE_DIR}
 )
-
-if(MSVC)
-    target_link_libraries(selaura INTERFACE minhook)
-else()
-    target_link_libraries(selaura INTERFACE dobby)
-endif()
 
 target_link_libraries(selaura INTERFACE
         fmt
