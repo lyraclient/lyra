@@ -96,17 +96,22 @@ struct fn_pointer_traits;
     }
 
     template <auto fn>
-    void patch_fn() {
+    void patch_fn(void* target) {
         auto key = fn_hash<fn>();
         auto it = hook_map.find(key);
         if (it == hook_map.end()) {
             auto [inserted, _] = hook_map.emplace(key,
                 safetyhook::create_inline(
-                    selaura::resolve_signature<fn>(),
+                    target,
                     selaura::as_void_ptr<fn>::get()
                 )
             );
         }
+    }
+
+    template <auto fn>
+    void patch_fn() {
+        patch_fn<fn>(reinterpret_cast<void*>(selaura::resolve_signature<fn>()));
     }
 
     template <auto fn, typename... Args>
@@ -129,7 +134,9 @@ struct fn_pointer_traits;
 
     template <auto... fn>
     void patch_fns() {
-        auto futures = { std::async(std::launch::async, patch_fn<fn>)... };
+        auto futures = std::array{
+            std::async(std::launch::async, [] { patch_fn<fn>(); })...
+        };
 
         for (auto& fut : futures) {
             fut.wait();

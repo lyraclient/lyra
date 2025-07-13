@@ -7,10 +7,12 @@
 #include <libhat/scanner.hpp>
 #include <libhat/signature.hpp>
 
+#include "signatures.hpp"
 #include "../platform/platform.hpp"
+#include "sdk/game/uri/GameArguments.hpp"
 
-#include "patches/render/ScreenView.hpp"
-#include "patches/world/BaseLightTextureImageBuilder.hpp"
+#include "sdk/gui/ScreenView.hpp"
+#include "sdk/world/BaseLightTextureImageBuilder.hpp"
 
 namespace selaura {
     template <auto fn>
@@ -58,6 +60,11 @@ namespace selaura {
     template <>
     struct selaura::signature<&NetherLightTextureImageBuilder::createBaseLightTextureData_hk> {
         static constexpr auto value = hat::compile_signature<"48 89 ? ? ? 48 89 ? ? ? 55 56 57 41 ? 41 ? 48 83 EC ? 49 8B ? 49 8B ? 48 8B ? 45 33">();
+    };
+
+    template <>
+    struct selaura::signature<&GameArguments::_onUri_hk> {
+        static constexpr auto value = hat::compile_signature<"48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B FA 48 8B F1">();
     };
 
     /*

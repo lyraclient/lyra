@@ -13,13 +13,11 @@ namespace selaura {
             spdlog::set_pattern("[%T] [client/%^%l%$] %v");
             spdlog::flush_on(spdlog::level::info);
 
-            spdlog::info("Warming signatures.");
-            selaura::prewarm_signatures<>();
-
             selaura::patch_fns<
                 &ScreenView::setupAndRender_hk,
                 &BaseLightTextureImageBuilder::createBaseLightTextureData_hk,
-                &NetherLightTextureImageBuilder::createBaseLightTextureData_hk
+                &NetherLightTextureImageBuilder::createBaseLightTextureData_hk,
+                &GameArguments::_onUri_hk
             >();
 
             auto end = std::chrono::steady_clock::now();
