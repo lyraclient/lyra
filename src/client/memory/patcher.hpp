@@ -1,0 +1,139 @@
+#pragma once
+#include <unordered_map>
+#include <utility>
+#include <type_traits>
+#include <cstring>
+#include <future>
+
+#include <safetyhook.hpp>
+#include "signatures.hpp"
+
+namespace selaura {
+    template <auto Fn, typename T = decltype(Fn)>
+    struct as_void_ptr;
+
+    template <auto Fn, typename Ret, typename... Args>
+    struct as_void_ptr<Fn, Ret(*)(Args...)> {
+        static void* get() { return reinterpret_cast<void*>(Fn); }
+    };
+
+    template <auto Fn, typename Class, typename Ret, typename... Args>
+    struct as_void_ptr<Fn, Ret(Class::*)(Args...)> {
+        static void* get() {
+#ifdef SELAURA_WINDOWS
+            union {
+                Ret(Class::*mpf)(Args...);
+                void* ptr;
+            } u{ Fn };
+            return u.ptr;
+#else
+            void* out = nullptr;
+            std::memcpy(&out, &Fn, sizeof(void*));
+            return out;
+#endif
+        }
+    };
+
+    template <auto Fn, typename Class, typename Ret, typename... Args>
+    struct as_void_ptr<Fn, Ret(Class::*)(Args...) const> {
+        static void* get() {
+#ifdef SELAURA_WINDOWS
+            union {
+                Ret(Class::*mpf)(Args...) const;
+                void* ptr;
+            } u{ Fn };
+            return u.ptr;
+#else
+            void* out = nullptr;
+            std::memcpy(&out, &Fn, sizeof(void*));
+            return out;
+#endif
+        }
+    };
+
+    template<typename T>
+    struct fn_traits;
+
+    template<typename Ret, typename... Args>
+    struct fn_traits<Ret(*)(Args...)> {
+        using return_type = Ret;
+    };
+
+    template<typename Class, typename Ret, typename... Args>
+    struct fn_traits<Ret(Class::*)(Args...)> {
+        using return_type = Ret;
+    };
+
+    template<typename Class, typename Ret, typename... Args>
+    struct fn_traits<Ret(Class::*)(Args...) const> {
+        using return_type = Ret;
+    };
+
+    template <typename T>
+struct fn_pointer_traits;
+
+    template <typename Ret, typename... Args>
+    struct fn_pointer_traits<Ret(*)(Args...)> {
+        using pointer_type = Ret(*)(Args...);
+    };
+
+    template <typename Class, typename Ret, typename... Args>
+    struct fn_pointer_traits<Ret(Class::*)(Args...)> {
+        using pointer_type = Ret(Class::*)(Args...);
+    };
+
+    template <typename Class, typename Ret, typename... Args>
+    struct fn_pointer_traits<Ret(Class::*)(Args...) const> {
+        using pointer_type = Ret(Class::*)(Args...) const;
+    };
+
+
+    inline std::unordered_map<std::size_t, SafetyHookInline> hook_map;
+
+    template <auto fn>
+    constexpr std::size_t fn_hash() {
+        return reinterpret_cast<std::size_t>(&fn);
+    }
+
+    template <auto fn>
+    void patch_fn() {
+        auto key = fn_hash<fn>();
+        auto it = hook_map.find(key);
+        if (it == hook_map.end()) {
+            auto [inserted, _] = hook_map.emplace(key,
+                safetyhook::create_inline(
+                    selaura::resolve_signature<fn>(),
+                    selaura::as_void_ptr<fn>::get()
+                )
+            );
+        }
+    }
+
+    template <auto fn, typename... Args>
+decltype(auto) call_fn(Args&&... args) {
+        using fn_t = decltype(fn);
+        using pointer_t = typename fn_pointer_traits<fn_t>::pointer_type;
+
+        auto key = fn_hash<fn>();
+        auto it = hook_map.find(key);
+        if (it == hook_map.end())
+            throw std::runtime_error("Hook not found");
+
+        auto trampoline = it->second.trampoline().address();
+
+        pointer_t original;
+        std::memcpy(&original, &trampoline, sizeof(trampoline));
+
+        return std::invoke(original, std::forward<Args>(args)...);
+    }
+
+    template <auto... fn>
+    void patch_fns() {
+        auto futures = { std::async(std::launch::async, patch_fn<fn>)... };
+
+        for (auto& fut : futures) {
+            fut.wait();
+        }
+    }
+
+}

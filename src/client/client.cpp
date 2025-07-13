@@ -1,4 +1,5 @@
 #include "client.hpp"
+#include "memory/patcher.hpp"
 
 namespace selaura {
     void client::init() {
@@ -15,9 +16,15 @@ namespace selaura {
             spdlog::info("Warming signatures.");
             selaura::prewarm_signatures<>();
 
+            selaura::patch_fns<
+                &ScreenView::setupAndRender_hk,
+                &BaseLightTextureImageBuilder::createBaseLightTextureData_hk,
+                &NetherLightTextureImageBuilder::createBaseLightTextureData_hk
+            >();
+
             auto end = std::chrono::steady_clock::now();
-            auto ms = std::chrono::duration<float>(end - start).count();
-            spdlog::info("Completed injection in {:.2f} ms.", ms);
+            auto ms = std::chrono::duration<float, std::milli>(end - start).count();
+            spdlog::info("Completed injection in {} ms.", static_cast<int>(ms));
         } catch (const std::exception& e) {
             spdlog::info("std::exception: {}\n", e.what());
             this->unload();

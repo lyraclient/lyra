@@ -9,33 +9,27 @@
 
 #include "../platform/platform.hpp"
 
+#include "patches/render/ScreenView.hpp"
+#include "patches/world/BaseLightTextureImageBuilder.hpp"
+
 namespace selaura {
     template <auto fn>
     struct signature {
         static_assert(sizeof(fn) == 0, "signature must be specialized for this tag type");
     };
 
-    /*template <>
-    struct selaura::signature<&ScreenView::setupAndRender> {
-        static constexpr auto value = hat::compile_signature<"48 8B C4 48 89 58 18 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 98 FD">();
-    };
-    */
-
     template <auto fn>
     constexpr auto get_signature = signature<fn>::value;
 
     template <auto fn, typename T = std::uintptr_t>
     T resolve_signature(std::string_view module_name = {}) {
-        static T addr = [&] {
-            static auto& handle = module_name.empty()
-                ? get_dynamic_module()
-                : get_dynamic_module(module_name);
+        static auto& handle = module_name.empty()
+               ? get_dynamic_module()
+               : get_dynamic_module(module_name);
 
-            return reinterpret_cast<T>(
-                hat::find_pattern(handle.memory_view, signature<fn>::value).get()
-            );
-        }();
-        return addr;
+        return reinterpret_cast<T>(
+            hat::find_pattern(handle.memory_view, signature<fn>::value).get()
+        );
     }
 
     template <auto... tags>
@@ -51,4 +45,26 @@ namespace selaura {
         }
     }
 
+    template <>
+    struct selaura::signature<&ScreenView::setupAndRender_hk> {
+        static constexpr auto value = hat::compile_signature<"48 8B C4 48 89 58 18 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 98 FD">();
+    };
+
+    template <>
+    struct selaura::signature<&BaseLightTextureImageBuilder::createBaseLightTextureData_hk> {
+        static constexpr auto value = hat::compile_signature<"48 89 5C 24 ? 48 89 54 24 ? 55 56 57 41 56 41 57 48 83 EC 40 4D 8B F1">();
+    };
+
+    template <>
+    struct selaura::signature<&NetherLightTextureImageBuilder::createBaseLightTextureData_hk> {
+        static constexpr auto value = hat::compile_signature<"48 89 ? ? ? 48 89 ? ? ? 55 56 57 41 ? 41 ? 48 83 EC ? 49 8B ? 49 8B ? 48 8B ? 45 33">();
+    };
+
+    /*
+    DEFINE_SIG(&bgfx::d3d11::RendererContextD3D11::submit_hk, "48 8B C4 55 53 56 57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ?");
+    DEFINE_SIG(&bgfx::d3d12::RendererContextD3D12::submit_hk, "40 55 53 56 57 41 54 41 55 41 56 41 57 B8");
+    DEFINE_SIG(&GameArguments::_onUri_hk, "48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B FA 48 8B F1");
+    DEFINE_SIG(&ScreenView::setupAndRender_hk, "48 8B C4 48 89 58 18 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 98 FD");
+    DEFINE_SIG(&BaseLightTextureImageBuilder::createBaseLightTextureData_hk, "48 89 5C 24 ? 48 89 54 24 ? 55 56 57 41 56 41 57 48 83 EC 40 4D 8B F1");
+    DEFINE_SIG(&NetherLightTextureImageBuilder::createBaseLightTextureData_hk, "48 89 ? ? ? 48 89 ? ? ? 55 56 57 41 ? 41 ? 48 83 EC ? 49 8B ? 49 8B ? 48 8B ? 45 33");*/
 };

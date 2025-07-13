@@ -49,6 +49,12 @@ CPMAddPackage(
         GIT_TAG master
 )
 
+CPMAddPackage(
+        NAME safetyhook
+        GITHUB_REPOSITORY cursey/safetyhook
+        GIT_TAG main
+)
+
 add_library(selaura INTERFACE)
 add_library(selaura::selaura ALIAS selaura)
 
@@ -63,4 +69,5 @@ target_link_libraries(selaura INTERFACE
         spdlog::spdlog
         GSL::gsl
         glm
+        safetyhook::safetyhook
 )

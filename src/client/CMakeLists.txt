@@ -5,6 +5,8 @@ add_library(selaura_client SHARED
     main.cpp
     client.cpp
     platform/platform.cpp
+    memory/patches/render/ScreenView.cpp
+    memory/patches/world/BaseLightTextureImageBuilder.cpp
 )
 
 target_include_directories(selaura_client PRIVATE
@@ -14,6 +16,7 @@ target_include_directories(selaura_client PRIVATE
     libhat
     gsl
     glm
+    safetyhook
 )
 
 target_link_libraries(selaura_client PRIVATE
@@ -22,4 +25,5 @@ target_link_libraries(selaura_client PRIVATE
     libhat
     Microsoft.GSL::GSL
     glm
+    safetyhook::safetyhook
 )
