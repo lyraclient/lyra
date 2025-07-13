@@ -110,7 +110,7 @@ struct fn_pointer_traits;
     }
 
     template <auto fn, typename... Args>
-decltype(auto) call_fn(Args&&... args) {
+    decltype(auto) call_fn(Args&&... args) {
         using fn_t = decltype(fn);
         using pointer_t = typename fn_pointer_traits<fn_t>::pointer_type;
 

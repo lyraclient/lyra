@@ -20,7 +20,7 @@ selaura::dynamic_module& selaura::get_dynamic_module(std::string_view name) {
     void* handle = dlopen(name.data(), RTLD_NOLOAD);
     if (!handle) return mod;
 
-    mod.handle = reinterpret_cast<void*>(handle);
+    mod.native_handle = reinterpret_cast<void*>(handle);
     dl_iterate_phdr([](dl_phdr_info* info, size_t, void* mod_ptr) -> int {
         auto* out = static_cast<dynamic_module*>(mod_ptr);
         if (!info->dlpi_name) return 0;
