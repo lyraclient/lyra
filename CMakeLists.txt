@@ -49,3 +49,9 @@ add_compile_definitions(
 
 add_subdirectory(include)
 add_subdirectory(src/client)
+
+if (MSVC)
+    add_compile_options(/W4 /permissive- /wd4201 /wd4324)
+elseif (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+    add_compile_options(-Wall -Wextra -Wpedantic -Wno-gnu-zero-variadic-macro-arguments)
+endif ()

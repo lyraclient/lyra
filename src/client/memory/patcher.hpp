@@ -7,6 +7,7 @@
 
 #include <safetyhook.hpp>
 #include "signatures.hpp"
+#include "spdlog/spdlog.h"
 
 namespace selaura {
     template <auto Fn, typename T = decltype(Fn)>
@@ -70,7 +71,7 @@ namespace selaura {
     };
 
     template <typename T>
-struct fn_pointer_traits;
+    struct fn_pointer_traits;
 
     template <typename Ret, typename... Args>
     struct fn_pointer_traits<Ret(*)(Args...)> {
@@ -111,7 +112,11 @@ struct fn_pointer_traits;
 
     template <auto fn>
     void patch_fn() {
-        patch_fn<fn>(reinterpret_cast<void*>(selaura::resolve_signature<fn>()));
+        void* target = reinterpret_cast<void*>(selaura::resolve_signature<fn>());
+        if (hook_map.contains(fn_hash<fn>())) return;
+
+        auto hook = safetyhook::create_inline(target, selaura::as_void_ptr<fn>::get());
+        hook_map.emplace(fn_hash<fn>(), std::move(hook));
     }
 
     template <auto fn, typename... Args>

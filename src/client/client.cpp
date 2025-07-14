@@ -17,7 +17,10 @@ namespace selaura {
                 &ScreenView::setupAndRender_hk,
                 &BaseLightTextureImageBuilder::createBaseLightTextureData_hk,
                 &NetherLightTextureImageBuilder::createBaseLightTextureData_hk,
-                &GameArguments::_onUri_hk
+                &GameArguments::_onUri_hk,
+                &Dimension::getTimeOfDay_hk,
+                &bgfx::d3d11::RendererContextD3D11::submit_hk,
+                &bgfx::d3d12::RendererContextD3D12::submit_hk
             >();
 
             auto end = std::chrono::steady_clock::now();

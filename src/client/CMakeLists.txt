@@ -7,8 +7,10 @@ add_library(selaura_client SHARED
     platform/platform.cpp
     memory/sdk/gui/ScreenView.cpp
     memory/sdk/world/BaseLightTextureImageBuilder.cpp
+    memory/sdk/world/Dimension.cpp
     memory/sdk/game/uri/GameArguments.cpp
     memory/sdk/renderer/screen/MinecraftUIRenderContext.cpp
+    memory/sdk/renderer/bgfx/bgfx.cpp
 )
 
 target_include_directories(selaura_client PRIVATE
