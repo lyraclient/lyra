@@ -82,4 +82,9 @@ namespace selaura {
     struct selaura::signature<&Dimension::getTimeOfDay_hk> {
         static constexpr auto value = hat::compile_signature<"? ? ? ? ? ? 76 05 F7 EA C1 FA 09 8B C2">();
     };
+
+    template <>
+    struct selaura::signature<&Dimension_ctor_hk> {
+        static constexpr auto value = hat::compile_signature<"48 89 5C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 55 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 41 8B D9 41 8B F8">();
+    };
 };

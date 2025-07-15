@@ -5,9 +5,7 @@
 void ScreenView::setupAndRender_hk(void* renderContext) {
     static bool once = false;
     if (!once && renderContext) {
-        void** mcuirc_vtable = *reinterpret_cast<void***>(renderContext);
-
-        selaura::patch_fn<&MinecraftUIRenderContext::renderCustom_hk>(mcuirc_vtable[26]);
+        selaura::patch_vtable_fn<&MinecraftUIRenderContext::renderCustom_hk>(renderContext, 26);
         once = true;
     }
 

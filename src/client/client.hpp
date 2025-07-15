@@ -7,6 +7,7 @@
 #include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
 
+#include "command/command_handler.hpp"
 #include "memory/signatures.hpp"
 
 namespace selaura {
@@ -27,7 +28,7 @@ namespace selaura {
         subsystems_tuple_t subsystems{};
     };
 
-    struct client : public client_base<> {
+    struct client : public client_base<selaura::command_handler> {
         void init();
         void unload();
     };

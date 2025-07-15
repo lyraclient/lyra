@@ -1,11 +1,20 @@
 #pragma once
 #include <memory>
 
+#include "../core/math/Color.hpp"
+
 struct BaseLightData {
-    std::byte pad[0x24];
+    mce::Color mSunriseColor;
+    float mGamma;
+    float mSkyDarken;
+    int mDimensionType;
+    float mDarkenWorldAmount;
+    float mPreviousDarkenWorldAmount;
     bool mNightvisionActive;
-    std::byte pad2[0x03];
     float mNightvisionScale;
+    bool mUnderwaterVision;
+    float mUnderwaterScale;
+    float mSkyFlashTime;
 };
 
 struct BaseLightTextureImageBuilder {

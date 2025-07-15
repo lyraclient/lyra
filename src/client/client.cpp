@@ -1,4 +1,5 @@
 #include "client.hpp"
+
 #include "memory/patcher.hpp"
 
 namespace selaura {
@@ -14,6 +15,7 @@ namespace selaura {
             spdlog::flush_on(spdlog::level::info);
 
             selaura::patch_fns<
+                &Dimension_ctor_hk,
                 &ScreenView::setupAndRender_hk,
                 &BaseLightTextureImageBuilder::createBaseLightTextureData_hk,
                 &NetherLightTextureImageBuilder::createBaseLightTextureData_hk,
@@ -26,6 +28,10 @@ namespace selaura {
             auto end = std::chrono::steady_clock::now();
             auto ms = std::chrono::duration<float, std::milli>(end - start).count();
             spdlog::info("Completed injection in {} ms.", static_cast<int>(ms));
+
+            spdlog::info("Write \"help\" in the command line to see a list of commands.");
+            auto command_handler = this->get<selaura::command_handler>();
+            //std::thread(&command_handler::init_cmd, command_handler).detach();
         } catch (const std::exception& e) {
             spdlog::info("std::exception: {}\n", e.what());
             this->unload();

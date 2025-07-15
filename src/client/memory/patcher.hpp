@@ -88,12 +88,23 @@ namespace selaura {
         using pointer_type = Ret(Class::*)(Args...) const;
     };
 
-
     inline std::unordered_map<std::size_t, SafetyHookInline> hook_map;
 
     template <auto fn>
     constexpr std::size_t fn_hash() {
-        return reinterpret_cast<std::size_t>(&fn);
+        if constexpr (std::is_pointer_v<decltype(fn)>) {
+            return reinterpret_cast<std::size_t>(fn);
+        } else if constexpr (std::is_member_function_pointer_v<decltype(fn)>) {
+            std::size_t hash = 0xcbf29ce484222325;
+            const unsigned char* p = reinterpret_cast<const unsigned char*>(&fn);
+            for (std::size_t i = 0; i < sizeof(fn); ++i) {
+                hash ^= p[i];
+                hash *= 0x100000001b3;
+            }
+            return hash;
+        } else {
+            static_assert([] { return false; }(), "Unsupported Fn type in fn_hash");
+        }
     }
 
     template <auto fn>
@@ -117,6 +128,12 @@ namespace selaura {
 
         auto hook = safetyhook::create_inline(target, selaura::as_void_ptr<fn>::get());
         hook_map.emplace(fn_hash<fn>(), std::move(hook));
+    }
+
+    template <auto fn>
+    void patch_vtable_fn(void* vtable, std::size_t index) {
+        void** obj = *reinterpret_cast<void***>(vtable);
+        patch_fn<fn>(obj[index]);
     }
 
     template <auto fn, typename... Args>
