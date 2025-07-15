@@ -31,7 +31,7 @@ namespace selaura {
 
             spdlog::info("Write \"help\" in the command line to see a list of commands.");
             auto command_handler = this->get<selaura::command_handler>();
-            //std::thread(&command_handler::init_cmd, command_handler).detach();
+            std::thread(&command_handler::init_cmd, command_handler).detach();
         } catch (const std::exception& e) {
             spdlog::info("std::exception: {}\n", e.what());
             this->unload();
