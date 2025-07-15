@@ -1,12 +1,12 @@
 #include "Dimension.hpp"
 #include "../../patcher.hpp"
 
-void Dimension_ctor_hk(Dimension* thisptr, void *level, void *dimId, DimensionHeightRange heightRange, void *callbackContext, std::string *name) {
+void Dimension::Dimension_ctor_hk(void *level, void *dimId, DimensionHeightRange heightRange, void *callbackContext, std::string *name) {
     if (heightRange.mMax == 128) {
         heightRange.mMax = 256; // nether roof fix
     }
 
-    selaura::call_fn<&Dimension_ctor_hk>(thisptr, level, dimId, heightRange, callbackContext, name);
+    selaura::call_fn<&Dimension::Dimension_ctor_hk>(this, level, dimId, heightRange, callbackContext, name);
 }
 
 

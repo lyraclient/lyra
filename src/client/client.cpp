@@ -15,7 +15,8 @@ namespace selaura {
             spdlog::flush_on(spdlog::level::info);
 
             selaura::patch_fns<
-                &Dimension_ctor_hk,
+                &Dimension::Dimension_ctor_hk,
+                &mce::framebuilder::RenderItemInHandDescription::RenderItemInHandDescription_ctor_hk,
                 &ScreenView::setupAndRender_hk,
                 &BaseLightTextureImageBuilder::createBaseLightTextureData_hk,
                 &NetherLightTextureImageBuilder::createBaseLightTextureData_hk,

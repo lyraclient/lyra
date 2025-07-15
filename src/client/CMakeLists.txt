@@ -11,6 +11,7 @@ add_library(selaura_client SHARED
     memory/sdk/game/uri/GameArguments.cpp
     memory/sdk/renderer/screen/MinecraftUIRenderContext.cpp
     memory/sdk/renderer/bgfx/bgfx.cpp
+    memory/sdk/core/RenderItemInHandDescription.cpp
     command/impl/Help.cpp
 )
 

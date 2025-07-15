@@ -8,7 +8,6 @@ struct DimensionHeightRange {
 
 
 struct Dimension {
+    void Dimension_ctor_hk(void* level, void* dimId, DimensionHeightRange heightRange, void* callbackContext, std::string* name);
     float getTimeOfDay_hk(int time, float a);
 };
-
-void Dimension_ctor_hk(Dimension* thisptr, void* level, void* dimId, DimensionHeightRange heightRange, void* callbackContext, std::string* name);

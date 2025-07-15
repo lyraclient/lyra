@@ -8,6 +8,7 @@
 #include <libhat/signature.hpp>
 
 #include "../platform/platform.hpp"
+#include "sdk/core/RenderItemInHandDescription.hpp"
 #include "sdk/game/uri/GameArguments.hpp"
 
 #include "sdk/gui/ScreenView.hpp"
@@ -84,7 +85,12 @@ namespace selaura {
     };
 
     template <>
-    struct selaura::signature<&Dimension_ctor_hk> {
+    struct selaura::signature<&Dimension::Dimension_ctor_hk> {
         static constexpr auto value = hat::compile_signature<"48 89 5C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 55 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 41 8B D9 41 8B F8">();
+    };
+
+    template <>
+    struct selaura::signature<&mce::framebuilder::RenderItemInHandDescription::RenderItemInHandDescription_ctor_hk> {
+        static constexpr auto value = hat::compile_signature<"48 89 ? ? ? 48 89 ? ? ? 55 56 57 41 ? 41 ? 41 ? 41 ? 48 83 EC ? 4D 8B ? 4D 8B ? 4C 8B ? 48 8B ? 45 33">();
     };
 };
