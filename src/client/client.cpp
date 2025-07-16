@@ -35,9 +35,7 @@ namespace selaura {
             std::thread(&command_handler::init_cmd, command_handler).detach();
 
             auto feature_manager = this->get<selaura::feature_manager>();
-            feature_manager.for_each([&](selaura::feature* feature) {
-                feature->toggle();
-            });
+            feature_manager.get<fullbright>().set_enabled(true);
         } catch (const std::exception& e) {
             spdlog::info("std::exception: {}\n", e.what());
             this->unload();

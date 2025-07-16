@@ -7,7 +7,7 @@ namespace selaura {
         void on_enable() override;
         void on_disable() override;
 
-        static void on_baselighttextureimagebuilder_event(selaura::BaseLightTextureImageBuilder_event& event);
+        void on_baselighttextureimagebuilder_event(selaura::BaseLightTextureImageBuilder_event& event);
     };
 
     template <>
