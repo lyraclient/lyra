@@ -1,6 +1,9 @@
 #pragma once
+#include <memory>
 #include <libhat/fixed_string.hpp>
 #include <glm/glm.hpp>
+
+#include "setting.hpp"
 
 namespace selaura {
     template <typename T>
@@ -17,6 +20,15 @@ namespace selaura {
         [[nodiscard]] bool get_enabled();
         void toggle();
 
+        template <typename setting_t = feature_settings, typename... args_t>
+        auto* add_setting(args_t... args) {
+            return settings.emplace_back(std::make_unique<setting_t>(std::forward<args_t>(args)...)).get();
+        }
+
+        [[nodiscard]] const std::vector<std::unique_ptr<feature_settings>>& getSettings() const {
+            return settings;
+        }
+
         void set_hotkey(int key = 0);
         [[nodiscard]] int get_hotkey();
 
@@ -25,6 +37,8 @@ namespace selaura {
     private:
         bool enabled = false;
         int hotkey = 0;
+
+        std::vector<std::unique_ptr<selaura::feature_settings>> settings;
     };
 
     struct visual_feature : public feature {

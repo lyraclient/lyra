@@ -4,6 +4,8 @@
 
 namespace selaura {
     struct fullbright : public feature {
+        fullbright();
+
         void on_enable() override;
         void on_disable() override;
 

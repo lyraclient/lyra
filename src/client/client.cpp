@@ -14,6 +14,9 @@ namespace selaura {
             spdlog::set_pattern("[%T] [client/%^%l%$] %v");
             spdlog::flush_on(spdlog::level::info);
 
+            auto& feature_manager = this->get<selaura::feature_manager>();
+            feature_manager.get<fullbright>().set_enabled(true);
+
             selaura::patch_fns<
                 &Dimension::Dimension_ctor_hk,
                 &mce::framebuilder::RenderItemInHandDescription::RenderItemInHandDescription_ctor_hk,
@@ -33,9 +36,6 @@ namespace selaura {
             spdlog::info("Write \"help\" in the command line to see a list of commands.");
             auto command_handler = this->get<selaura::command_handler>();
             std::thread(&command_handler::init_cmd, command_handler).detach();
-
-            auto feature_manager = this->get<selaura::feature_manager>();
-            feature_manager.get<fullbright>().set_enabled(true);
         } catch (const std::exception& e) {
             spdlog::info("std::exception: {}\n", e.what());
             this->unload();
