@@ -8,6 +8,8 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 
 #include "command/command_handler.hpp"
+#include "event/event_manager.hpp"
+#include "feature/feature_manager.hpp"
 #include "memory/signatures.hpp"
 
 namespace selaura {
@@ -16,19 +18,22 @@ namespace selaura {
 
     template <typename... subsystems_t>
     struct client_base : std::enable_shared_from_this<client_base<subsystems_t...>> {
-        using subsystems_tuple_t = std::tuple<std::shared_ptr<subsystems_t>...>;
-        client_base() : subsystems{std::make_tuple(std::make_shared<subsystems_t>()...)} {};
+        using subsystems_tuple_t = std::tuple<subsystems_t...>;
+
+        client_base() : subsystems{} {}
 
         template <typename T>
         requires one_of<T, subsystems_t...>
-        constexpr std::shared_ptr<T> get() {
-            return std::get<std::shared_ptr<T>>(subsystems);
+        constexpr T& get() {
+            return std::get<T>(subsystems);
         }
+
     private:
-        subsystems_tuple_t subsystems{};
+        subsystems_tuple_t subsystems;
     };
 
-    struct client : public client_base<selaura::command_handler> {
+
+    struct client : public client_base<selaura::event_manager, selaura::command_handler, selaura::feature_manager> {
         void init();
         void unload();
     };

@@ -13,6 +13,8 @@ add_library(selaura_client SHARED
     memory/sdk/renderer/bgfx/bgfx.cpp
     memory/sdk/core/RenderItemInHandDescription.cpp
     command/impl/Help.cpp
+    feature/feature.cpp
+    feature/impl/render/fullbright.cpp
 )
 
 target_include_directories(selaura_client PRIVATE
