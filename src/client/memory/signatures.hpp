@@ -15,6 +15,7 @@
 #include "sdk/renderer/bgfx/bgfx.hpp"
 #include "sdk/world/BaseLightTextureImageBuilder.hpp"
 #include "sdk/world/Dimension.hpp"
+#include "sdk/client/ClientInstanceScreenModel.hpp"
 
 namespace selaura {
     template <auto fn>
@@ -92,5 +93,10 @@ namespace selaura {
     template <>
     struct selaura::signature<&mce::framebuilder::RenderItemInHandDescription::RenderItemInHandDescription_ctor_hk> {
         static constexpr auto value = hat::compile_signature<"48 89 ? ? ? 48 89 ? ? ? 55 56 57 41 ? 41 ? 41 ? 41 ? 48 83 EC ? 4D 8B ? 4D 8B ? 4C 8B ? 48 8B ? 45 33">();
+    };
+
+    template <>
+    struct selaura::signature<&ClientInstanceScreenModel::executeCommand_hk> {
+        static constexpr auto value = hat::compile_signature<"48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B EA 48 8B F1 C7 44 24">();
     };
 };
