@@ -14,7 +14,6 @@ namespace selaura {
 
     void fullbright::on_baselighttextureimagebuilder_event(selaura::BaseLightTextureImageBuilder_event &event) {
         auto& brightness = std::get<0>(this->settings).value;
-        spdlog::info("Fullbright event brightness: {}", brightness);
 
         event.mNightvisionActive = true;
         event.mNightvisionScale = brightness;
