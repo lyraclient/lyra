@@ -12,6 +12,7 @@ add_library(selaura_client SHARED
     memory/sdk/renderer/screen/MinecraftUIRenderContext.cpp
     memory/sdk/renderer/bgfx/bgfx.cpp
     memory/sdk/core/RenderItemInHandDescription.cpp
+    memory/sdk/client/ClientInstanceScreenModel.cpp
     command/impl/Help.cpp
     feature/impl/render/fullbright.cpp
 )
