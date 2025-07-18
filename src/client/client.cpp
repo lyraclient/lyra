@@ -15,7 +15,9 @@ namespace selaura {
             spdlog::flush_on(spdlog::level::info);
 
             auto& feature_manager = this->get<selaura::feature_manager>();
-            feature_manager.get<fullbright>().set_enabled(true);
+            feature_manager.for_each([](auto& f) {
+                f->set_enabled(true);
+            });
 
             selaura::patch_fns<
                 &Dimension::Dimension_ctor_hk,
@@ -34,8 +36,6 @@ namespace selaura {
             spdlog::info("Completed injection in {} ms.", static_cast<int>(ms));
 
             spdlog::info("Write \"help\" in the command line to see a list of commands.");
-            auto command_handler = this->get<selaura::command_handler>();
-            std::thread(&command_handler::init_cmd, command_handler).detach();
         } catch (const std::exception& e) {
             spdlog::info("std::exception: {}\n", e.what());
             this->unload();

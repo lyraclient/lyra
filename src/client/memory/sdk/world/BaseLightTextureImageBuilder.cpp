@@ -7,22 +7,24 @@ std::unique_ptr<BaseLightData> BaseLightTextureImageBuilder::createBaseLightText
     auto data = selaura::call_fn<&BaseLightTextureImageBuilder::createBaseLightTextureData_hk>(this, clientInstance, base_light_data);
 
     selaura::BaseLightTextureImageBuilder_event event{ data->mNightvisionActive, data->mNightvisionScale };
-    selaura::get()->get<selaura::event_manager>().dispatch<selaura::BaseLightTextureImageBuilder_event>(event);
+    auto& ev = selaura::get()->get<selaura::event_manager>();
+    ev.dispatch<selaura::BaseLightTextureImageBuilder_event>(event);
 
     data->mNightvisionActive = event.mNightvisionActive;
     data->mNightvisionScale = event.mNightvisionScale;
 
-    return data;
+    return std::move(data);
 }
 
 std::unique_ptr<BaseLightData> NetherLightTextureImageBuilder::createBaseLightTextureData_hk(void* clientInstance, const BaseLightData* base_light_data) {
     auto data = selaura::call_fn<&NetherLightTextureImageBuilder::createBaseLightTextureData_hk>(this, clientInstance, base_light_data);
 
     selaura::BaseLightTextureImageBuilder_event event{ data->mNightvisionActive, data->mNightvisionScale };
-    selaura::get()->get<selaura::event_manager>().dispatch<selaura::BaseLightTextureImageBuilder_event>(event);
+    auto& ev = selaura::get()->get<selaura::event_manager>();
+    ev.dispatch<selaura::BaseLightTextureImageBuilder_event>(event);
 
     data->mNightvisionActive = event.mNightvisionActive;
     data->mNightvisionScale = event.mNightvisionScale;
 
-    return data;
+    return std::move(data);
 }
