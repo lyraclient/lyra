@@ -5,6 +5,8 @@
 #include <type_traits>
 
 #include "impl/render/fullbright.hpp"
+#include "impl/render/paperdoll.hpp"
+#include "impl/render/enchant_glint.hpp"
 
 namespace selaura {
     template <typename T>
@@ -32,7 +34,9 @@ namespace selaura {
     class feature_manager {
     public:
         using features_t = std::tuple<
-            std::shared_ptr<fullbright>
+            std::shared_ptr<fullbright>,
+            std::shared_ptr<paperdoll>,
+            std::shared_ptr<enchant_glint>
         >;
 
         feature_manager()

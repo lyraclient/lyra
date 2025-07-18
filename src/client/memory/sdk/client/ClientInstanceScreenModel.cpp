@@ -1,6 +1,6 @@
 #include "./ClientInstanceScreenModel.hpp"
 #include "../../patcher.hpp"
 
-void ClientInstanceScreenModel::executeCommand_hk(void* commandLine) {
-	std::string* cmdStr = static_cast<std::string*>(commandLine);
+void ClientInstanceScreenModel::executeCommand_hk(const std::string& command_line) {
+	selaura::call_fn<&ClientInstanceScreenModel::executeCommand_hk>(this, command_line);
 }

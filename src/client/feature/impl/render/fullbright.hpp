@@ -13,14 +13,14 @@ namespace selaura {
         static constexpr auto description = hat::fixed_string{ "Maximizes world brightness" };
 
         using settings = std::tuple<
-            seluara::feature_setting<float>
+            selaura::feature_setting<float>
         >;
     };
 
     struct fullbright : feature<fullbright> {
         fullbright() {
             auto& brightness = std::get<0>(this->settings);
-            brightness = seluara::feature_setting<float>("Brightness", 1.0f, 0.0f, 1.0f);
+            brightness = selaura::feature_setting<float>("Brightness", 1.0f, 0.0f, 1.0f);
         }
 
         void on_enable() override;
