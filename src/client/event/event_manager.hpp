@@ -5,13 +5,14 @@
 #include <functional>
 #include <memory>
 #include <vector>
+#include <mutex>
 
 namespace selaura {
     struct event_manager {
         using subscription_token = std::uint64_t;
 
         template <typename T>
-        using listener_t = std::function<void(T& event)>;
+        using listener_t = std::function<void(T&)>;
 
         template<typename T>
         struct listener_container {
@@ -19,15 +20,24 @@ namespace selaura {
                 subscription_token token;
                 std::function<void(T&)> callback;
                 void* instance = nullptr;
-                void* memberFunction = nullptr;
+                union {
+                    void (*static_fn)(T&) = nullptr;
+                    void* member_fn;
+                };
             };
             std::vector<listener_entry> listeners;
             subscription_token nextToken = 1;
+            std::mutex mutex;
         };
 
         template <typename T>
         void dispatch(T& event) {
-            auto listenersCopy = get_listener_container<T>().listeners;
+            auto& container = get_listener_container<T>();
+            std::vector<typename listener_container<T>::listener_entry> listenersCopy;
+            {
+                std::lock_guard lock(container.mutex);
+                listenersCopy = container.listeners;
+            }
             for (const auto& entry : listenersCopy) {
                 entry.callback(event);
             }
@@ -42,13 +52,16 @@ namespace selaura {
         template <typename T>
         subscription_token subscribe(std::function<void(T&)> listener) {
             auto& container = get_listener_container<T>();
+            std::lock_guard lock(container.mutex);
             subscription_token token = container.nextToken++;
             typename listener_container<T>::listener_entry entry;
             entry.token = token;
-            entry.callback = std::move(listener);
+            entry.callback = listener;
             entry.instance = nullptr;
-            entry.memberFunction = nullptr;
+            entry.static_fn = listener;
+
             container.listeners.push_back(std::move(entry));
+
             return token;
         }
 
@@ -60,21 +73,25 @@ namespace selaura {
         template <typename T, typename C>
         subscription_token subscribe(void (C::* listener)(T&), C* instance) {
             auto& container = get_listener_container<T>();
+            std::lock_guard lock(container.mutex);
             subscription_token token = container.nextToken++;
             typename listener_container<T>::listener_entry entry;
             entry.token = token;
-            entry.callback = [instance, listener](T& event) {
-                (instance->*listener)(event);
-                };
+            entry.callback = [instance, listener](T& event) { (instance->*listener)(event); };
             entry.instance = static_cast<void*>(instance);
-            entry.memberFunction = *reinterpret_cast<void**>(&listener);
+            entry.member_fn = *reinterpret_cast<void**>(&listener);
+
             container.listeners.push_back(std::move(entry));
+
             return token;
         }
 
         template <typename T>
         void unsubscribe(const std::function<void(T&)>& listener) {
-            auto& entries = get_listener_container<T>().listeners;
+            auto& container = get_listener_container<T>();
+            std::lock_guard lock(container.mutex);
+            auto& entries = container.listeners;
+
             for (auto it = entries.begin(); it != entries.end(); ++it) {
                 if (it->instance != nullptr)
                     continue;
@@ -102,11 +119,15 @@ namespace selaura {
 
         template <typename T, typename C>
         void unsubscribe(void (C::* listener)(T&), C* instance) {
-            auto& entries = get_listener_container<T>().listeners;
+            auto& container = get_listener_container<T>();
+            std::lock_guard lock(container.mutex);
+            auto& entries = container.listeners;
+
             void* targetInstance = static_cast<void*>(instance);
             void* targetMemberFunc = *reinterpret_cast<void**>(&listener);
+
             for (auto it = entries.begin(); it != entries.end(); ++it) {
-                if (it->instance == targetInstance && it->memberFunction == targetMemberFunc) {
+                if (it->instance == targetInstance && it->member_fn == targetMemberFunc) {
                     entries.erase(it);
                     return;
                 }
@@ -116,27 +137,31 @@ namespace selaura {
         template <typename T>
         subscription_token subscribe(void (*listener)(T&)) {
             auto& container = get_listener_container<T>();
+            std::lock_guard lock(container.mutex);
             subscription_token token = container.nextToken++;
-            typename listener_container<T>::listener_entry entry;
-            entry.token = token;
-            entry.callback = listener;
-            entry.instance = nullptr;
-            entry.memberFunction = reinterpret_cast<void*>(listener);
-            container.listeners.push_back(std::move(entry));
+            container.listeners.push_back({
+                token,
+                listener,
+                nullptr,
+                listener
+            });
             return token;
         }
 
         template <typename T>
         void unsubscribe(void (*listener)(T&)) {
-            auto& entries = get_listener_container<T>().listeners;
-            void* targetFunc = reinterpret_cast<void*>(listener);
+            auto& container = get_listener_container<T>();
+            std::lock_guard lock(container.mutex);
+            auto& entries = container.listeners;
+
             for (auto it = entries.begin(); it != entries.end(); ++it) {
-                if (it->memberFunction == targetFunc && it->instance == nullptr) {
+                if (it->static_fn == listener && it->instance == nullptr) {
                     entries.erase(it);
                     return;
                 }
             }
         }
+
     private:
         template<typename T>
         listener_container<T>& get_listener_container() {
@@ -144,4 +169,4 @@ namespace selaura {
             return container;
         }
     };
-};
+}

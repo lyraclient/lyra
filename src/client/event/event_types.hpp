@@ -1,4 +1,5 @@
 #pragma once
+#include "../memory/sdk/world/BaseLightTextureImageBuilder.hpp"
 
 namespace selaura {
     struct cancellable_event {
@@ -9,7 +10,8 @@ namespace selaura {
         bool cancelled;
     };
 
-    struct frame_event {
-        int fps;
+    struct BaseLightTextureImageBuilder_event {
+        bool mNightvisionActive;
+        float mNightvisionScale;
     };
 };
