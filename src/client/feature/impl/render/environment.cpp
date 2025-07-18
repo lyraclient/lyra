@@ -20,7 +20,7 @@ namespace selaura {
         if (time_passage_speed_bool) {
             event.time *= time_passage_speed;
         } else {
-            event.time = time;
+            event.overriden_time = time;
         }
     }
 

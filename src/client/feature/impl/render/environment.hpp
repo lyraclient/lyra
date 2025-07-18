@@ -22,7 +22,7 @@ namespace selaura {
     struct environment : feature<environment> {
         environment() {
             std::get<0>(this->settings) = selaura::feature_setting<float>("Time", 0.5f, 0.0f, 1.0f);
-            std::get<1>(this->settings) = selaura::feature_setting<bool>("Change Time Passage Speed", true);
+            std::get<1>(this->settings) = selaura::feature_setting<bool>("Change Time Passage Speed", false);
             std::get<2>(this->settings) = selaura::feature_setting<float>("Time Passage Speed", 50.0f, 0.0f, 100.f);
         }
 

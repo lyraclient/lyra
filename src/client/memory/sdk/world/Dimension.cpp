@@ -13,9 +13,13 @@ void Dimension::Dimension_ctor_hk(void *level, void *dimId, DimensionHeightRange
 
 
 float Dimension::getTimeOfDay_hk(int time, float a) {
-    selaura::getTimeOfDay_event event{ time };
+    selaura::getTimeOfDay_event event{ time, -1 };
     auto& ev = selaura::get()->get<selaura::event_manager>();
     ev.dispatch<selaura::getTimeOfDay_event>(event);
 
-    return selaura::call_fn<&Dimension::getTimeOfDay_hk>(this, event.time, a);
+    if (event.overriden_time != -1) {
+        return event.overriden_time;
+    } else {
+        return selaura::call_fn<&Dimension::getTimeOfDay_hk>(this, event.time, a);
+    }
 }

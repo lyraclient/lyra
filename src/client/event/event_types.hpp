@@ -28,5 +28,6 @@ namespace selaura {
 
     struct getTimeOfDay_event {
         int time;
+        float overriden_time;
     };
 };
