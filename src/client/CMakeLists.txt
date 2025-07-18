@@ -17,6 +17,7 @@ add_library(selaura_client SHARED
     feature/impl/render/fullbright.cpp
     feature/impl/render/paperdoll.cpp
     feature/impl/render/enchant_glint.cpp
+    feature/impl/render/environment.cpp
 )
 
 target_include_directories(selaura_client PRIVATE

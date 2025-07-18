@@ -7,6 +7,7 @@
 #include "impl/render/fullbright.hpp"
 #include "impl/render/paperdoll.hpp"
 #include "impl/render/enchant_glint.hpp"
+#include "impl/render/environment.hpp"
 
 namespace selaura {
     template <typename T>
@@ -36,7 +37,8 @@ namespace selaura {
         using features_t = std::tuple<
             std::shared_ptr<fullbright>,
             std::shared_ptr<paperdoll>,
-            std::shared_ptr<enchant_glint>
+            std::shared_ptr<enchant_glint>,
+            std::shared_ptr<environment>
         >;
 
         feature_manager()

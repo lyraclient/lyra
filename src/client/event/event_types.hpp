@@ -25,4 +25,8 @@ namespace selaura {
         glm::vec3 color;
         float alpha;
     };
+
+    struct getTimeOfDay_event {
+        int time;
+    };
 };
