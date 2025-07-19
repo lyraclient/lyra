@@ -1,21 +1,19 @@
 <h1 align="center">
-Selaura Client
+Lyra Client
 </h1>
 <p align="center">
- <a href="https://selauraclient.com/discord" target="_blank">Discord</a>
+ <a href="https://discord.gg/hvKjyErx" target="_blank">Discord</a>
  •
- <a href="https://selauraclient.com/" target="_blank">Website</a>
+ <a href="https://discord.gg/hvKjyErx" target="_blank">Website</a>
  •
- <a href="https://docs.selauraclient.com/" target="_blank">Scripting Documentation</a>
+ <a href="https://discord.gg/hvKjyErx" target="_blank">Scripting Documentation</a>
 </p>
 
-This repository contains the full source code for Selaura Client. Selaura Client is a mod that aims to improve user experience of Minecraft: Bedrock Edition.
+This repository contains the full source code for Lyra Client. Lyra Client is a mod that aims to improve user experience of Minecraft: Bedrock Edition.
 
 ## 🖥️ Compatibility
-Selaura Client currently supports:
+Lyra Client currently supports:
 - Windows 10/11 (64-bit Only)
-- Xbox (requires Dev Mode and installation of DLL within Minecraft's files)
-- Android 9+ (ARM64 Only)
 - Any device supporting [mcpelauncher-linux](https://github.com/minecraft-linux/mcpelauncher-manifest)
 
 ## ✨ Open Source Technologies Used
@@ -33,4 +31,5 @@ Selaura Client currently supports:
 [![Star History Chart](https://api.star-history.com/svg?repos=selauraclient/client&type=Date)](https://www.star-history.com/#selauraclient/client&Date)
 
 ## 📄 License
-Selaura Client currently falls under the [GPL-3.0 License](LICENSE). Feel free to use this code as a fork in your own project. Thank you!
+Lyra Client currently falls under the [GPL-3.0 License](LICENSE). Feel free to use this code as a fork in your own project. Thank you!
+Also please be aware we are forked from Selaura Client which is owned by our Lead Developer Chyves
