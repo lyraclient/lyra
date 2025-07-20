@@ -10,20 +10,16 @@
 #include "impl/render/environment.hpp"
 
 namespace selaura {
-    template <typename T>
-    struct get_ptr_type {};
-
-    template <typename T>
-    struct get_ptr_type<std::shared_ptr<T>> {
-        using type = T;
-    };
-
-    template <typename T>
-    using get_ptr_type_t = typename get_ptr_type<T>::type;
+    using feature_types = std::tuple<
+        fullbright,
+        paperdoll,
+        enchant_glint,
+        environment
+    >;
 
     template <typename Tuple, std::size_t... Is>
     auto make_features_impl(std::index_sequence<Is...>) {
-        return std::make_tuple(std::make_shared<get_ptr_type_t<std::tuple_element_t<Is, Tuple>>>()...);
+        return std::make_tuple(std::make_shared<std::tuple_element_t<Is, Tuple>>()...);
     }
 
     template <typename Tuple>
@@ -34,15 +30,10 @@ namespace selaura {
 
     class feature_manager {
     public:
-        using features_t = std::tuple<
-            std::shared_ptr<fullbright>,
-            std::shared_ptr<paperdoll>,
-            std::shared_ptr<enchant_glint>,
-            std::shared_ptr<environment>
-        >;
+        using features_t = decltype(make_features<feature_types>());
 
         feature_manager()
-            : features(make_features<features_t>())
+            : features(make_features<feature_types>())
         {}
 
         template <typename T>
